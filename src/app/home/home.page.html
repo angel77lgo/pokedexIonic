@@ -1,20 +1,63 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>
-      Blank
+      Pokedex
     </ion-title>
   </ion-toolbar>
 </ion-header>
-
+<style>
+  :root {
+    --ion-safe-area-top: 20px;
+    --ion-safe-area-bottom: 22px;
+  }
+</style>
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-searchbar placeholder="Search Pokemon" (ionChange)="onSearchChange($event)"></ion-searchbar>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+
+  <ion-list>
+    <ion-item>
+      <ion-label>Select a type</ion-label>
+      <ion-select (ionChange)="changeType($event)" placeholder="Type">
+        <ion-select-option>All</ion-select-option>
+        <ion-select-option [value]="type.toLowerCase()" *ngFor="let type of types;" >{{type}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="pokemon.length == 0">
+    <ion-item *ngFor="let i of [1,2,3,4,5]">
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label class="ion-text-capitalize">
+        <h2>
+          <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+        </h2>
+        <p>
+          <ion-skeleton-text animated style="width: 20%;"></ion-skeleton-text>
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-item *ngFor="let poke of pokemon;" [routerLink]="poke.pokeIndex">
+      <ion-avatar slot="start">
+        <img [src]="poke.image" style="background: #f2f2f2;" />
+      </ion-avatar>
+      <ion-label class="ion-text-capitalize">
+        <h2>{{poke.name}}</h2>
+        <p>#{{poke.pokeIndex}}</p>
+      </ion-label>
+      <ion-text *ngFor="let type of poke.Mytypes;">
+        <ion-badge [ngStyle]="{'background':'#'+TYPE_COLORS[type]}">{{type.charAt(0).toUpperCase() + type.slice(1)}}</ion-badge>
+      </ion-text>
+    </ion-item>
+  </ion-list>
+<!-- 
+  <ion-infinite-scroll (ionInfinite)="loadPokemon(false,$event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading More Pokemon...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll> -->
 </ion-content>

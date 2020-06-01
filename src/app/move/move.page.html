@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home/"></ion-back-button>
+    </ion-buttons>
+    <ion-title class="ion-text-capitalize">{{move?.name}} </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <div *ngIf="move">
+    <ion-card style="color: black;">
+    
+      <ion-card-content>
+        {{move.effect_entries[0].effect.replace('$effect_chance%',move.effect_chance + '%')}}
+        <br>
+        <!-- {{move.effect_entries[0].short_effect.replace('$effect_chance%',move.effect_chance + '%')}} -->
+
+      </ion-card-content>
+     
+      <ion-card-content>
+       
+        
+        <p>Accuracy: {{move.accuracy}}</p>
+        <p>Power Points: {{move.pp}} PP</p>
+        
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
