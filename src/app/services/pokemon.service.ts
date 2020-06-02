@@ -14,44 +14,40 @@ export class PokemonService {
   moveUrl = "https://pokeapi.co/api/v2/move";
   specieUrl = "https://pokeapi.co/api/v2/pokemon-species"
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getPokemon(offset = 0) {
-    return this.http
-      .get(`${this.baseUrl}/pokemon?offset=${offset}&limit=25`)
-      .pipe(
-        map((result) => {
-          return result["results"];
-        }),
-        map((pokemons) => {
-          return pokemons.map((pokemon, index) => {
-            // console.log("pokemon", index)
-            pokemon.image = this.getPokeImage(index + offset + 1);
-            pokemon.Mytypes = [];
-            this.getPokeType(index + offset + 1).then((response: any) => {
-              response.map((type) => {
-                pokemon.Mytypes.push(type);
-              });
+    return this.http.get(`${this.baseUrl}/pokemon?offset=${offset}&limit=50`).pipe(
+      map((result) => {
+        return result["results"];
+      }),
+      map((pokemons) => {
+        return pokemons.map((pokemon, index) => {
+          // console.log("pokemon", index)
+          pokemon.image = this.getPokeImage(index + offset + 1);
+          pokemon.Mytypes = [];
+          this.getPokeType(index + offset + 1).then((response: any) => {
+            response.map((type) => {
+              pokemon.Mytypes.push(type);
             });
-            pokemon.pokeIndex = offset + index + 1;
-            return pokemon;
           });
-        })
-      );
+          pokemon.pokeIndex = offset + index + 1;
+          return pokemon;
+        });
+      })
+    );
   }
 
   getPokeType(index) {
     let type = new Promise((resolve, reject) => {
-      this.http
-        .get(`${this.baseUrl}/pokemon/${index}`)
-        .pipe(
-          map((pokemon) => {
-            let t = pokemon["types"];
-            let types = [];
-            t.map((type) => types.push(type["type"]["name"]));
-            return types;
-          })
-        )
+      this.http.get(`${this.baseUrl}/pokemon/${index}`).pipe(
+        map((pokemon) => {
+          let t = pokemon["types"];
+          let types = [];
+          t.map((type) => types.push(type["type"]["name"]));
+          return types;
+        })
+      )
         .subscribe((response) => {
           resolve(response);
         });
@@ -75,16 +71,14 @@ export class PokemonService {
   }
 
   getPerPart(part) {
-    return this.http
-      .get(`${this.baseUrl}/pokemon?offset=${part}&limit=886`)
-      .pipe(
-        map((pokemon) => {
-          let pokes = pokemon["results"];
-          let names = [];
-          pokes.map((p) => names.push(p["name"]));
-          return names;
-        })
-      );
+    return this.http.get(`${this.baseUrl}/pokemon?offset=${part}&limit=886`).pipe(
+      map((pokemon) => {
+        let pokes = pokemon["results"];
+        let names = [];
+        pokes.map((p) => names.push(p["name"]));
+        return names;
+      })
+    );
   }
 
   getPokeDetails(index) {
@@ -106,7 +100,7 @@ export class PokemonService {
           });
         });
         poke['description'] = "";
-        console.log("specieee",poke["species"]["url"] )
+        // console.log("specieee", poke["species"]["url"])
         this.getDescription(poke["species"]["url"]).then(resp => {
           poke['description'] = resp;
         });
@@ -144,13 +138,13 @@ export class PokemonService {
   getMoveType(move) {
     let moveType = new Promise((resolve, reject) => {
       this.http.get(`${this.moveUrl}/${move}`).pipe(
-          map((mov) => {
-            let type = mov["type"]["name"];
-            return type;
-          })
-        ).subscribe((response) => {
-          resolve(response);
-        });
+        map((mov) => {
+          let type = mov["type"]["name"];
+          return type;
+        })
+      ).subscribe((response) => {
+        resolve(response);
+      });
     });
     return moveType;
   }
@@ -163,16 +157,21 @@ export class PokemonService {
     );
   }
 
-  getDescription(url){
-    let description = new Promise((resolve,reject) => {
+  getDescription(url) {
+    let description = new Promise((resolve, reject) => {
       this.http.get(url).pipe(
         map(result => {
-          return result["flavor_text_entries"][1]["flavor_text"]
-            
+          let desc = ""
+          result["flavor_text_entries"].map(flavors => {
+            if(flavors["language"]["name"] === "en"){
+              desc = flavors["flavor_text"]
+            }
+          });
+          return desc
         })
       ).subscribe(res => {
         resolve(res)
-      })
+      });
     });
 
     return description;

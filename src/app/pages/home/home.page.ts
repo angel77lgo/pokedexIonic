@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
-import { PokemonService } from "../services/pokemon.service";
+import { PokemonService } from "../../services/pokemon.service";
 import { IonInfiniteScroll } from "@ionic/angular";
 import { rejects, equal } from 'assert';
 import { async } from '@angular/core/testing';
@@ -88,7 +88,7 @@ export class HomePage implements OnInit {
     this.names.map((names: String) => {
       let valueLength = value.length;
       let newname = names.substring(0, valueLength)
-      if (newname === value) { 
+      if (newname === value) {
         equalsName.push(names)
       }
     });
@@ -103,9 +103,9 @@ export class HomePage implements OnInit {
     }
 
     equalsName.map(pokename => {
-    
+
       this.pokeService.findPokemon(pokename).subscribe(res => {
-     
+
         res['Mytypes'] = []
         res['types'].map(type => {
           res['Mytypes'].push(type['type']['name']);
@@ -127,17 +127,21 @@ export class HomePage implements OnInit {
     let pokes = [];
 
     this.pokeService.getPokeByType(type).subscribe(async (response) => {
-      for (let name of response){
+      for (let name of response) {
+        // let res = await new Promise((resolve,reject) => this.pokeService.findPokemon(name).subscribe(resp => resolve(resp)));
+        new Promise((resolve, reject) =>
 
-        let res = await new Promise((resolve,reject) => this.pokeService.findPokemon(name).subscribe(resp => resolve(resp)));
-
-        res['Mytypes'] = []
-        res['types'].map(type => {
-          res['Mytypes'].push(type['type']['name'])
-        })
-
-        matchType.push(res)
-        
+          this.pokeService.findPokemon(name).subscribe(res =>
+            
+            resolve(res))).then(res => {
+              
+              res['Mytypes'] = []
+              res['types'].map(type => {
+                res['Mytypes'].push(type['type']['name'])
+              })
+              matchType.push(res)
+            }).
+            catch(err => console.log("err"))
       }
     })
 

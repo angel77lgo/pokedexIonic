@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PokemonService } from '../services/pokemon.service';
+import { PokemonService } from '../../services/pokemon.service';
 
 @Component({
   selector: 'app-move',
