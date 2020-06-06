@@ -1,0 +1,19 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>menu</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+  <ion-menu [content] = "mycontent">
+    <ion-content>
+      <ion-list>
+        a
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <ion-nav #mycontent [root] = "rootPage"></ion-nav>
+  <button ion-button menuToggle>Toggle Menu</button>
+
+</ion-content>

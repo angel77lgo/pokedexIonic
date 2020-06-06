@@ -71,7 +71,7 @@ export class PokemonService {
   }
 
   getPerPart(part) {
-    return this.http.get(`${this.baseUrl}/pokemon?offset=${part}&limit=886`).pipe(
+    return this.http.get(`${this.baseUrl}/pokemon?offset=${part}&limit=890`).pipe(
       map((pokemon) => {
         let pokes = pokemon["results"];
         let names = [];

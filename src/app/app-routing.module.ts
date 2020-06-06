@@ -19,6 +19,10 @@ const routes: Routes = [
     path: 'home/:index/:move',
     loadChildren: () => import('./pages/move/move.module').then( m => m.MovePageModule)
   },
+  {
+    path: 'menu',
+    loadChildren: () => import('./pages/menu/menu.module').then( m => m.MenuPageModule)
+  },
 ];
 
 @NgModule({
